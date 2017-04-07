@@ -50,12 +50,30 @@ tozsde_plot <- function(number_of_days, my_adatom, list_of_markets){
     title = "Change (%)",
     titlefont = f
   )
+  
+  m <- list(
+    l = 100,
+    r = 100,
+    b = 10,
+    t = 150,
+    pad = 4
+  )
+  write.csv(my_df, "minta.csv")
   p<-plot_ly(my_df, x = ~Date, y = ~change, color =~ticker, text= ~Close)%>%
-    add_lines()%>%layout(title = paste(number_of_days, 'Days'), xaxis = x, yaxis = y)
+    add_lines()%>%layout(title = paste(number_of_days, 'Days'), xaxis = x, yaxis = y, height = 900, width = 1200)%>%
+    subplot(nrows=100, shareX = T )
   
   return(p)
   
 }
+
+
+# 
+# plot_ly(x = ~date, y = ~value, color = ~variable, colors = "Dark2",
+#         yaxis = ~paste0("y", id)) %>%
+#   add_lines() %>%
+#   subplot(nrows = 5, shareX = TRUE)
+
 
 
 get_company_list <- function(){
@@ -68,9 +86,10 @@ get_company_list <- function(){
   comp_list[MarketCap=='/a',]$MarketCap <- '0'
   comp_list[MarketCap=='n/a',]$MarketCap <- '0'
   
+  
   comp_list$LastSale <- as.numeric(comp_list$LastSale)
   
-  #marketcap
+
   for (i in 1:nrow(comp_list)){
     comp_list$MarketCap[i] <- substr(comp_list$MarketCap[i], 2,nchar(comp_list$MarketCap[i]))
   }
@@ -91,6 +110,56 @@ get_company_list <- function(){
   return(comp_list)
   
 }
+
+
+
+
+
+# 
+# tozsde_plot <- function(number_of_days, my_adatom, list_of_markets){
+#   
+#   my_days <- sort(unique(my_adatom$Date), decreasing = T)[c(1:number_of_days)]
+#   adatom <- data.table(my_adatom[my_adatom$Date %in% my_days,])
+#   setorder(adatom, ticker, Date)
+#   
+#   my_df <- data.table()
+#   
+#   for(i in list_of_markets){
+#     tmp_data <-adatom[ticker==i,]
+#     current <- tmp_data$Close[1]
+#     change <- c(0, (( tmp_data$Close[2:number_of_days]/current)-1)*100)
+#     
+#     tmp_data$change <- change
+#     my_df <- rbind(my_df, tmp_data)
+#     
+#   }
+#   f <- list(
+#     family = "Courier New, monospace",
+#     size = 18,
+#     color = "#7f7f7f"
+#   )
+#   x <- list(
+#     title = "Date",
+#     titlefont = f
+#   )
+#   y <- list(
+#     title = "Change (%)",
+#     titlefont = f
+#   )
+#   
+#   m <- list(
+#     l = 100,
+#     r = 100,
+#     b = 10,
+#     t = 150,
+#     pad = 4
+#   )
+#   p<-plot_ly(my_df, x = ~Date, y = ~change, color =~ticker, text= ~Close)%>%
+#     add_lines()%>%layout(title = paste(number_of_days, 'Days'), xaxis = x, yaxis = y, height = 900, width = 1200)
+#   
+#   return(p)
+#   
+# }
 
 
 

@@ -24,7 +24,6 @@ function(input, output, session) {
   
   my_list <- reactive({
     lista <- comp_list[comp_list$Sector==input$sector & comp_list$industry==input$industries_select,]$Symbol
-    print(my_list)
     return(lista)
   })
   
@@ -38,7 +37,12 @@ function(input, output, session) {
   
 
   my_plot <- reactive({
-    tozsde_plot(number_of_days = input$integer, my_adatom = my_data(), list_of_markets =my_list() )
+    if(nrow(my_data())!=0){
+    return(tozsde_plot(number_of_days = input$integer, my_adatom = my_data(), list_of_markets =my_list()))
+    }
+    else{
+      return(plot_ly(x=0,y=0,mode="markers",type="scatter"))
+    }
   })
   
   output$summary_plot <- renderPlotly({
