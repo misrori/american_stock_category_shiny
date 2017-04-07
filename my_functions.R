@@ -58,7 +58,6 @@ tozsde_plot <- function(number_of_days, my_adatom, list_of_markets){
     t = 150,
     pad = 4
   )
-  write.csv(my_df, "minta.csv")
   p<-plot_ly(my_df, x = ~Date, y = ~change, color =~ticker, text= ~Close)%>%
     add_lines()%>%layout(title = paste(number_of_days, 'Days'), xaxis = x, yaxis = y, height = 900, width = 1200)%>%
     subplot(nrows=100, shareX = T )
